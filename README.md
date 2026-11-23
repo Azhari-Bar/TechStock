@@ -69,56 +69,9 @@ tercatat sebagai riwayat pergerakan stok.
 - Node.js 20+ dan npm
 - MariaDB 10.4+ atau MySQL 8+
 
-## Instalasi
-
-> Baru pertama kali menjalankan proyek ini di komputer sendiri? Langsung ke
-> bagian [Menjalankan di Komputer Lain](#menjalankan-di-komputer-lain-anggota-kelompok)
-> — langkahnya lebih lengkap dan berurutan.
-
-```bash
-composer install
-npm install
-cp .env.example .env          # Windows: copy .env.example .env
-php artisan key:generate
-```
-
-Sesuaikan koneksi database di `.env` (nama database, user, password, dan port
-sesuai MySQL di komputer masing-masing — XAMPP/Laragon umumnya `3306`):
-
-```dotenv
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=techstock
-DB_USERNAME=...
-DB_PASSWORD=...
-```
-
-Buat database kosong terlebih dahulu, lalu isi struktur tabel dan data contoh:
-
-```bash
-php artisan migrate --seed
-php artisan storage:link
-npm run build
-```
-
-## Menjalankan
-
-```bash
-php artisan serve
-```
-
-Buka http://localhost:8000. Akun admin awal dibuat oleh seeder (lihat
-`database/seeders/UserSeeder.php`), lalu ganti password setelah login pertama.
-
-Saat mengembangkan tampilan, jalankan `npm run dev` di terminal terpisah.
-Setelah selesai mengubah tampilan, jalankan `npm run build` supaya hasilnya
-tersimpan di `public/build`.
-
 ## Menjalankan di Komputer Lain (Anggota Kelompok)
 
-Bagian ini untuk anggota yang baru pertama kali menjalankan proyek ini di
-komputernya sendiri. Ikuti berurutan; jangan lewati langkah database.
+Ikuti langkah berikut secara berurutan; jangan lewati database.
 
 ### 1. Pasang aplikasi pendukung
 
@@ -192,13 +145,16 @@ php artisan storage:link
 npm run build
 ```
 
-### 6. Jalankan
+Seeder membuat akun admin otomatis (lihat `database/seeders/UserSeeder.php` untuk
+emailnya). Login dan **segera ganti password**.
+
+### 6. Jalankan server
 
 ```bash
 php artisan serve
 ```
 
-Buka http://localhost:8000, lalu login memakai akun admin dari seeder.
+Buka http://localhost:8000 → login memakai akun admin.
 
 ### 7. Rutinitas kerja harian
 
