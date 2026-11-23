@@ -1,13 +1,18 @@
-# TECHSTOCK
+# Sistem Manajemen Inventaris Gudang Berbasis Web untuk Optimalisasi Stok Toko Laptop dan Komputer
 
-**Sistem inventaris dan peminjaman barang berbasis web** — dibuat untuk
-menggantikan pencatatan stok dan peminjaman barang yang masih manual
-(spreadsheet/buku), sehingga stok, unit barang, dan riwayat peminjaman tercatat
-rapi di satu tempat.
+**TECHSTOCK** — aplikasi web untuk mengelola stok gudang, unit barang, dan
+peminjaman pada toko laptop dan komputer, menggantikan pencatatan manual
+(spreadsheet/buku) agar stok selalu akurat dan mudah ditelusuri.
 
 ## Deskripsi
 
-TECHSTOCK dipakai oleh dua jenis pengguna:
+Toko laptop dan komputer menyimpan banyak unit dengan nomor seri berbeda, plus
+aksesoris yang jumlahnya berubah setiap kali ada barang masuk, penjualan, atau
+peminjaman. TECHSTOCK mencatat semua perpindahan itu dalam satu sistem sehingga
+jumlah stok, lokasi penyimpanan, kondisi unit, dan riwayat peminjaman selalu
+sinkron.
+
+Aplikasi ini dipakai oleh dua jenis pengguna:
 
 - **Pengunjung** — membuka katalog, mencari barang, lalu mengajukan peminjaman
   tanpa perlu membuat akun. Setelah mengirim pengajuan, mereka mendapat nomor
@@ -145,8 +150,9 @@ git clone https://github.com/Azhari-Bar/TechStock.git
 cd TechStock
 ```
 
-Butuh akses: minta pemilik repo mengundangmu lewat
-**Settings → Collaborators**, lalu terima email undangannya.
+Repo ini publik, jadi clone bisa langsung. Kalau kamu ikut mengerjakan dan perlu
+`git push`, minta pemilik repo mengundangmu lewat **Settings → Collaborators**,
+lalu terima email undangannya.
 
 ### 3. Siapkan database
 
