@@ -57,6 +57,7 @@ class RentalController extends Controller
             'rental_period_type' => ['required', Rule::in(['daily', 'weekly', 'monthly'])],
             'loan_type' => ['required', Rule::in(['internal', 'external'])],
             'identity_document' => ['required', 'file', 'mimes:jpg,jpeg,png', 'max:5120'],
+            'proof' => ['required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
             'notes' => ['nullable', 'string', 'max:2000'],
         ]);
         $product = \App\Models\Product::whereKey($data['product_id'])->where('is_active', true)->where('is_borrowable', true)->firstOrFail();
