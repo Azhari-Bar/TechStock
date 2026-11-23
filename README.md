@@ -69,7 +69,7 @@ tercatat sebagai riwayat pergerakan stok.
 - Node.js 20+ dan npm
 - MariaDB 10.4+ atau MySQL 8+
 
-## Menjalankan di Komputer Lain (Anggota Kelompok)
+## Menjalankan di Komputer 
 
 Ikuti langkah berikut secara berurutan; jangan lewati database.
 
