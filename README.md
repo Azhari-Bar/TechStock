@@ -35,6 +35,10 @@ dan **Chart.js**. Laporan dapat diunduh sebagai Excel (`.xlsx`).
 
 ## Instalasi
 
+> Baru pertama kali menjalankan proyek ini di komputer sendiri? Langsung ke
+> bagian [Menjalankan di Komputer Lain](#menjalankan-di-komputer-lain-anggota-kelompok)
+> — langkahnya lebih lengkap dan berurutan.
+
 ```bash
 composer install
 npm install
@@ -69,6 +73,125 @@ php artisan serve
 ```
 
 Buka http://localhost:8000
+
+## Menjalankan di Komputer Lain (Anggota Kelompok)
+
+Bagian ini untuk anggota yang baru pertama kali menjalankan proyek ini di
+komputernya sendiri. Ikuti berurutan; jangan lewati langkah database.
+
+### 1. Pasang aplikasi pendukung
+
+| Kebutuhan | Cara termudah (Windows) |
+|---|---|
+| PHP 8.2+ | Ikut di XAMPP/Laragon, atau unduh dari php.net lalu tambahkan ke `PATH` |
+| MySQL/MariaDB | XAMPP atau Laragon (Start → MySQL) |
+| Composer | https://getcomposer.org/download/ |
+| Node.js 20+ | https://nodejs.org (pilih LTS) |
+| Git | https://git-scm.com/download/win |
+
+Cek semuanya sudah terbaca:
+
+```bash
+php -v
+composer -V
+node -v
+npm -v
+git --version
+```
+
+Kalau muncul "not recognized", tutup terminal, buka lagi. Kalau masih, tambahkan
+folder `bin` PHP/Composer ke Environment Variables → `Path`.
+
+### 2. Ambil kode proyek
+
+```bash
+git clone https://github.com/Azhari-Bar/TechStock.git
+cd TechStock
+```
+
+Butuh akses: minta pemilik repo mengundangmu lewat
+**Settings → Collaborators**, lalu terima email undangannya.
+
+### 3. Siapkan database
+
+1. Jalankan MySQL (XAMPP/Laragon → Start MySQL)
+2. Buka http://localhost/phpmyadmin
+3. Tab **Databases** → nama: `techstock` → **Create**
+4. Catat user & password MySQL-mu (default XAMPP: user `root`, password kosong)
+
+### 4. Konfigurasi `.env`
+
+```bash
+copy .env.example .env
+php artisan key:generate
+```
+
+Buka `.env`, sesuaikan bagian ini dengan MySQL di komputermu:
+
+```dotenv
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=techstock
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+`DB_PASSWORD` diisi kalau MySQL-mu memakai password. Jangan pakai `.env` milik
+teman — nilainya berbeda di tiap komputer, dan `APP_KEY` harus milik sendiri.
+
+### 5. Pasang dependency dan isi data
+
+```bash
+composer install
+npm install
+php artisan migrate --seed
+php artisan storage:link
+npm run build
+```
+
+### 6. Jalankan
+
+```bash
+php artisan serve
+```
+
+Buka http://localhost:8000. Login admin memakai akun dari seeder (lihat
+`database/seeders/UserSeeder.php`), lalu ganti password.
+
+### 7. Rutinitas kerja harian
+
+Sebelum mulai mengerjakan apa pun:
+
+```bash
+git pull
+composer install      # kalau composer.json berubah
+npm install           # kalau package.json berubah
+php artisan migrate   # kalau ada migration baru
+```
+
+Setelah selesai mengubah kode:
+
+```bash
+git add .
+git status --short    # pastikan .env TIDAK muncul
+git commit -m "fitur: ..."
+git push
+```
+
+Saat mengubah tampilan, jalankan `npm run dev` di terminal kedua.
+
+### Masalah yang sering muncul
+
+| Gejala | Solusi |
+|---|---|
+| `php`/`composer` tidak dikenali | Buka terminal baru, atau tambahkan ke `Path` |
+| `SQLSTATE[HY000] [2002]` | MySQL belum di-start, atau `DB_PORT` salah |
+| `Access denied for user` | `DB_USERNAME`/`DB_PASSWORD` tidak cocok |
+| `Unknown database 'techstock'` | Database belum dibuat di phpMyAdmin |
+| Halaman tanpa CSS/JS | Jalankan `npm run build`, hapus `public/hot` |
+| Error 500 / blank | Cek `storage/logs/laravel.log`, pastikan `php artisan key:generate` sudah dijalankan |
+| `Class "..." not found` | `composer install` belum dijalankan |
+| `Vite manifest not found` | `npm run build` belum dijalankan |
 
 Akun admin awal dibuat oleh seeder. Lihat `database/seeders/UserSeeder.php`
 untuk emailnya, lalu **segera ganti password** setelah login pertama.
