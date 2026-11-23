@@ -1,11 +1,42 @@
 # TECHSTOCK
 
-Sistem inventaris dan peminjaman barang berbasis web. Admin mengelola stok,
-unit barang, supplier, serta pengajuan peminjaman; pengunjung dapat melihat
-katalog dan mengajukan peminjaman tanpa akun.
+**Sistem inventaris dan peminjaman barang berbasis web** — dibuat untuk
+menggantikan pencatatan stok dan peminjaman barang yang masih manual
+(spreadsheet/buku), sehingga stok, unit barang, dan riwayat peminjaman tercatat
+rapi di satu tempat.
 
-Dibuat dengan **Laravel 11**, **MariaDB/MySQL**, **Tailwind CSS**, **Alpine.js**,
-dan **Chart.js**. Laporan dapat diunduh sebagai Excel (`.xlsx`).
+## Deskripsi
+
+TECHSTOCK dipakai oleh dua jenis pengguna:
+
+- **Pengunjung** — membuka katalog, mencari barang, lalu mengajukan peminjaman
+  tanpa perlu membuat akun. Setelah mengirim pengajuan, mereka mendapat nomor
+  referensi untuk memantau status dan mengunggah bukti pembayaran.
+- **Admin** — mengelola data barang (kategori, merek, produk, unit), mencatat
+  barang masuk dari supplier, menyetujui atau menolak pengajuan, mencatat serah
+  terima dan pengembalian unit, menghitung denda keterlambatan, serta mengunduh
+  laporan dalam format Excel.
+
+Alur utamanya: **barang masuk → stok tercatat → pengajuan peminjaman → disetujui
+→ unit diserahkan → dikembalikan → stok kembali**, dan setiap perpindahan unit
+tercatat sebagai riwayat pergerakan stok.
+
+## Teknologi yang Digunakan
+
+| Bagian | Teknologi |
+|---|---|
+| Bahasa pemrograman | PHP 8.2+ |
+| Framework backend | Laravel 11 (MVC, Eloquent ORM, Blade) |
+| Database | MariaDB 10.4+ / MySQL 8+ (SQL, diakses lewat PDO) |
+| Tampilan | Blade + Tailwind CSS 3 |
+| Interaksi di browser | Alpine.js, Chart.js (grafik dashboard) |
+| Build asset | Vite 5 |
+| Laporan Excel | maatwebsite/excel (PhpSpreadsheet) |
+| Laporan PDF | barryvdh/laravel-dompdf |
+| Autentikasi | Laravel Breeze |
+| Pengujian | PHPUnit 10 |
+| Manajemen dependency | Composer (PHP) dan npm (JavaScript) |
+| Version control | Git / GitHub |
 
 ## Fitur
 
@@ -72,7 +103,12 @@ npm run build
 php artisan serve
 ```
 
-Buka http://localhost:8000
+Buka http://localhost:8000. Akun admin awal dibuat oleh seeder (lihat
+`database/seeders/UserSeeder.php`), lalu ganti password setelah login pertama.
+
+Saat mengembangkan tampilan, jalankan `npm run dev` di terminal terpisah.
+Setelah selesai mengubah tampilan, jalankan `npm run build` supaya hasilnya
+tersimpan di `public/build`.
 
 ## Menjalankan di Komputer Lain (Anggota Kelompok)
 
@@ -136,8 +172,9 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-`DB_PASSWORD` diisi kalau MySQL-mu memakai password. Jangan pakai `.env` milik
-teman — nilainya berbeda di tiap komputer, dan `APP_KEY` harus milik sendiri.
+`DB_PASSWORD` diisi kalau MySQL-mu memakai password. Setiap komputer memakai
+`.env` sendiri dengan `APP_KEY` hasil generate sendiri, karena nilainya berbeda
+di tiap instalasi.
 
 ### 5. Pasang dependency dan isi data
 
@@ -155,8 +192,7 @@ npm run build
 php artisan serve
 ```
 
-Buka http://localhost:8000. Login admin memakai akun dari seeder (lihat
-`database/seeders/UserSeeder.php`), lalu ganti password.
+Buka http://localhost:8000, lalu login memakai akun admin dari seeder.
 
 ### 7. Rutinitas kerja harian
 
@@ -173,12 +209,10 @@ Setelah selesai mengubah kode:
 
 ```bash
 git add .
-git status --short    # pastikan .env TIDAK muncul
+git status --short    # cek file yang akan di-commit
 git commit -m "fitur: ..."
 git push
 ```
-
-Saat mengubah tampilan, jalankan `npm run dev` di terminal kedua.
 
 ### Masalah yang sering muncul
 
@@ -192,14 +226,6 @@ Saat mengubah tampilan, jalankan `npm run dev` di terminal kedua.
 | Error 500 / blank | Cek `storage/logs/laravel.log`, pastikan `php artisan key:generate` sudah dijalankan |
 | `Class "..." not found` | `composer install` belum dijalankan |
 | `Vite manifest not found` | `npm run build` belum dijalankan |
-
-Akun admin awal dibuat oleh seeder. Lihat `database/seeders/UserSeeder.php`
-untuk emailnya, lalu **segera ganti password** setelah login pertama.
-
-Saat mengembangkan tampilan, jalankan `npm run dev` di terminal terpisah.
-Jangan bagikan link aplikasi selama `npm run dev` menyala: file `public/hot`
-membuat browser mengambil CSS/JS dari `localhost:5173`, sehingga tampilan
-rusak di komputer lain. Tutup dev server lalu jalankan `npm run build`.
 
 ## Pengujian
 
@@ -220,26 +246,6 @@ routes/web.php                rute publik
 routes/admin.php              rute admin
 ```
 
-## Keamanan
-
-- File `.env` berisi kredensial dan **tidak boleh** di-commit. Gunakan
-  `.env.example` sebagai template.
-- Di server produksi: `APP_ENV=production`, `APP_DEBUG=false`, dan `APP_KEY`
-  hasil generate sendiri.
-- Ganti password admin bawaan sebelum aplikasi dipakai.
-- Dokumen identitas dan bukti pembayaran disimpan pada disk `local`
-  (tidak dapat diakses langsung dari browser).
-- Akses file dokumen pengguna dilindungi middleware admin.
-
 ## Deployment
 
 Panduan lengkap untuk VPS/Nginx ada di [DEPLOYMENT.md](DEPLOYMENT.md).
-
-## Troubleshooting
-
-| Gejala | Penyebab umum |
-|---|---|
-| Halaman tampil tanpa CSS/JS | `public/hot` masih ada, atau `npm run build` belum dijalankan |
-| Error 500 setelah upload | `storage/` dan `bootstrap/cache/` tidak writable |
-| `Connection refused` / SQLSTATE[HY000] | MySQL belum jalan atau `DB_PORT` salah |
-| Error ekstensi saat `composer install` | `zip`, `gd`, atau `dom` belum aktif di PHP |
